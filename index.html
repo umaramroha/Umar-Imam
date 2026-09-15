@@ -1,97 +1,72 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>coder-app-name</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <title>Royal Food Court Amroha | Pizza, Burger & Fast Food</title>
+    <meta name="description" content="Royal Food Court in Mohalla Mullana, Amroha serves pizza, burgers, sandwiches, momos and fast food. Call us to place your order." />
+    <meta name="keywords" content="Royal Food Court, Amroha, pizza, burger, sandwich, momos, fast food, Mohalla Mullana, food order, restaurant Amroha" />
+    <meta name="author" content="Royal Food Court" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://royalfoodcourt.com" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:title" content="Royal Food Court Amroha | Pizza, Burger & Fast Food" />
+    <meta property="og:description" content="Royal Food Court in Mohalla Mullana, Amroha serves pizza, burgers, sandwiches, momos and fast food. Call us to place your order." />
+    <meta property="og:url" content="https://royalfoodcourt.com" />
+    <meta property="og:site_name" content="Royal Food Court" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Royal Food Court Amroha | Pizza, Burger & Fast Food" />
+    <meta name="twitter:description" content="Royal Food Court in Mohalla Mullana, Amroha serves pizza, burgers, sandwiches, momos and fast food. Call us to place your order." />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#b91c1c" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data: Restaurant -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Royal Food Court",
+      "description": "Royal Food Court in Mohalla Mullana, Amroha serves pizza, burgers, sandwiches, momos and fast food.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Mohalla Mullana",
+        "addressLocality": "Amroha",
+        "addressRegion": "Uttar Pradesh",
+        "postalCode": "244221",
+        "addressCountry": "IN"
+      },
+      "telephone": "+919897893259",
+      "priceRange": "₹₹",
+      "servesCuisine": ["Pizza", "Burger", "Sandwich", "Fast Food", "Indian"],
+      "url": "https://royalfoodcourt.com",
+      "hasMap": "https://www.google.com/maps/search/?api=1&query=Royal%20Food%20Court%2C%20Mohalla%20Mullana%2C%20Amroha%2C%20Uttar%20Pradesh%20244221"
+    }
+    </script>
+
     <style>
-      /* 内联样式确保主题色立即生效，避免闪烁 */
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-      }
-      html.light,
-      html.light body {
-        background-color: #ffffff !important;
-        color: #000000;
-      }
-      html.dark,
-      html.dark body {
-        background-color: #1a1a1a !important;
-        color: #ffffff;
-      }
+      html { scroll-behavior: smooth; }
+      body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+      .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
-    <script>
-      // 在 React 加载前立即设置主题，避免闪烁
-      (function () {
-        const isInIframe = window.self !== window.top;
-
-        function applyThemeToDOM(theme) {
-          document.documentElement.classList.remove("light", "dark");
-          document.documentElement.classList.add(theme);
-          document.documentElement.setAttribute("data-theme", theme);
-        }
-
-        if (isInIframe) {
-          // 监听父窗口主动推送的主题消息
-          window.addEventListener("message", function (event) {
-            if (event.data && typeof event.data.theme === "string") {
-              const theme = event.data.theme;
-              if (theme === "light" || theme === "dark") {
-                applyThemeToDOM(theme);
-              }
-            }
-          });
-        } else {
-          // 非 iframe 环境，使用默认 light 主题
-          applyThemeToDOM("light");
-        }
-      })();
-    </script>
-      <script>
-      (function () {
-        if (window.self === window.top) return;
-        var reported = {};
-        window.addEventListener("error", function (event) {
-          // 资源加载失败的 error 事件没有 message，此处仅上报 JS 运行时错误
-          if (!event || !event.message) return;
-          var key =
-            event.message + "|" + (event.filename || "") + "|" + (event.lineno || 0);
-          if (reported[key]) return; // 相同错误只上报一次，避免渲染循环刷屏
-          reported[key] = true;
-          try {
-            window.parent.postMessage(
-              {
-                type: "sandbox-runtime-error",
-                payload: {
-                  message: String(event.message).slice(0, 500),
-                  filename: event.filename || "",
-                  lineno: event.lineno || 0,
-                  colno: event.colno || 0,
-                  stack:
-                    event.error && event.error.stack
-                      ? String(event.error.stack).slice(0, 2000)
-                      : ""
-                }
-              },
-              "*"
-            );
-          } catch (e) {
-            /* 上报失败不影响页面运行 */
-          }
-        });
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
