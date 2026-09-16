@@ -1,12 +1,11 @@
 ```
-# Dependencies
-node_modules/
+# HTML specific build artifacts (if any)
+*.html~
 
-# Build outputs
-dist/
-build/
-*.js.map
-*.ts.map
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
 # Environment
 .env
@@ -16,27 +15,38 @@ build/
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Logs
-*.log
-
-# Python (if present)
+# Dependencies
+node_modules/
+venv/
+.venv/
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+.mypy_cache/
+.pytest_cache/
+dist/
+build/
+target/
+.gradle/
 
-# Coverage
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Compiled files
+*.pyc
+*.class
+*.o
+*.exe
+*.dll
+*.so
+*.a
+*.obj
+*.out
+
+# Coverage reports
 coverage/
 htmlcov/
 .coverage
-
-# Temporary files
-*.tmp
-.DS_Store
-Thumbs.db
 
 # Compressed files
 *.zip

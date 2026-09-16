@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hashmi Dawakhana Delivery Slip Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+      min-height: 100vh;
+    }
+    
+    .slip-container {
+      width: 1080px;
+      height: 1350px;
+      background: white;
+      border-radius: 24px;
+      padding: 80px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform-origin: top center;
+    }
+    
+    .slip-header {
+      text-align: center;
+      border-bottom: 3px solid #dc2626;
+      padding-bottom: 40px;
+    }
+    
+    .slip-title {
+      font-size: 72px;
+      font-weight: 800;
+      color: #dc2626;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+    
+    .slip-subtitle {
+      font-size: 36px;
+      color: #6b7280;
+      margin-top: 16px;
+      font-weight: 500;
+    }
+    
+    .slip-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+      padding: 40px 0;
+    }
+    
+    .slip-greeting {
+      font-size: 42px;
+      color: #1f2937;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .slip-message {
+      font-size: 36px;
+      color: #374151;
+      line-height: 1.6;
+      margin: 0;
+      padding: 32px;
+      background: #fef2f2;
+      border-left: 8px solid #dc2626;
+      border-radius: 16px;
+    }
+    
+    .slip-details {
+      background: #f9fafb;
+      padding: 40px;
+      border-radius: 16px;
+      border: 2px solid #e5e7eb;
+    }
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 32px;
+      color: #1f2937;
+    }
+    
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+      color: #6b7280;
+    }
+    
+    .detail-value {
+      font-weight: 700;
+      color: #1f2937;
+    }
+    
+    .slip-footer {
+      text-align: center;
+      border-top: 3px solid #dc2626;
+      padding-top: 40px;
+    }
+    
+    .contact-info {
+      font-size: 36px;
+      color: #1f2937;
+      font-weight: 600;
+      margin: 0 0 24px 0;
+    }
+    
+    .contact-number {
+      font-size: 48px;
+      color: #dc2626;
+      font-weight: 800;
+      margin: 16px 0;
+    }
+    
+    .thank-you {
+      font-size: 32px;
+      color: #6b7280;
+      margin: 0;
+      font-style: italic;
+    }
+    
+    .input-field {
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      border-color: #dc2626;
+      ring: 2px solid #dc2626;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+    }
+    
+    .btn-secondary {
+      background: white;
+      border: 2px solid #e5e7eb;
+      color: #374151;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      border-color: #dc2626;
+      color: #dc2626;
+      transform: translateY(-2px);
+    }
+    
+    .preview-wrapper {
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .preview-scale {
+      transform: scale(0.35);
+      transform-origin: top left;
+      width: 285%;
+      height: 285%;
+    }
+    
+    @media (max-width: 768px) {
+      .slip-container {
+        width: 540px;
+        height: 675px;
+        padding: 40px;
+        border-radius: 12px;
+      }
+      
+      .slip-title { font-size: 36px; }
+      .slip-subtitle { font-size: 18px; }
+      .slip-greeting { font-size: 21px; }
+      .slip-message { font-size: 18px; padding: 16px; }
+      .detail-row { font-size: 16px; padding: 10px 0; }
+      .contact-info { font-size: 18px; }
+      .contact-number { font-size: 24px; }
+      .thank-you { font-size: 16px; }
+      
+      .preview-scale {
+        transform: scale(1);
+        width: 100%;
+        height: 100%;
+      }
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl md:text-5xl font-bold text-red-600 mb-2">HASHMI DAWAKHANA</h1>
+      <p class="text-xl text-gray-600">Delivery Slip Generator</p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+      <!-- Input Form -->
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <svg class="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Customer Details
+        </h2>
+        
+        <form id="slipForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Customer Name *</label>
+            <input type="text" id="customerName" class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none" placeholder="e.g., Pintu Verma" required>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Tracking Number *</label>
+            <input type="text" id="trackingNumber" class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none" placeholder="e.g., ITTC0000000122" required>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Courier *</label>
+            <select id="courier" class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none" required>
+              <option value="">Select Courier</option>
+              <option value="Sureship">Sureship</option>
+              <option value="EKART">EKART</option>
+              <option value="India Post">India Post</option>
+              <option value="Blue Dart">Blue Dart</option>
+            </select>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Amount (Optional)</label>
+              <input type="number" id="amount" class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none" placeholder="₹1400">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Payment Type</label>
+              <select id="paymentType" class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none">
+                <option value="">Select</option>
+                <option value="COD">COD</option>
+                <option value="Prepaid">Prepaid</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Delivery Status *</label>
+            <select id="deliveryStatus" class="input-field w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none" required>
+              <option value="">Select Status</option>
+              <option value="Shipped">Shipped</option>
+              <option value="In Transit">In Transit</option>
+              <option value="Out for Delivery">Out for Delivery</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Ready to Dispatch">Ready to Dispatch</option>
+              <option value="Network Delay">Network Delay</option>
+              <option value="Redirected">Redirected</option>
+            </select>
+          </div>
+          
+          <div class="flex gap-3 pt-4">
+            <button type="button" onclick="generateSlip()" class="btn-primary flex-1 text-white font-bold py-4 px-6 rounded-xl shadow-lg">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Generate Slip
+            </button>
+            <button type="button" onclick="resetForm()" class="btn-secondary flex-1 font-bold py-4 px-6 rounded-xl">
+              <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              Reset
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="space-y-6">
+        <!-- Slip Preview -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            Slip Preview
+          </h2>
+          
+          <div id="previewContainer" class="preview-wrapper bg-gray-100 rounded-xl p-4" style="display: none;">
+            <div class="preview-scale">
+              <div id="slipContent" class="slip-container">
+                <div class="slip-header">
+                  <h1 class="slip-title">HASHMI DAWAKHANA</h1>
+                  <p class="slip-subtitle">Delivery Update from Dr. Hashmi</p>
+                </div>
+                
+                <div class="slip-body">
+                  <p class="slip-greeting" id="slipGreeting">Dear Customer,</p>
+                  <p class="slip-message" id="slipMessage">Your medicine parcel is out for delivery.</p>
+                  
+                  <div class="slip-details">
+                    <div class="detail-row">
+                      <span class="detail-label">Courier:</span>
+                      <span class="detail-value" id="slipCourier">EKART</span>
+                    </div>
+                    <div class="detail-row">
+                      <span class="detail-label">Tracking No:</span>
+                      <span class="detail-value" id="slipTracking">ITTC0000000122</span>
+                    </div>
+                    <div class="detail-row" id="amountRow" style="display: none;">
+                      <span class="detail-label">Amount:</span>
+                      <span class="detail-value" id="slipAmount">₹1400 (COD)</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="slip-footer">
+                  <p class="contact-info">For more information, contact:</p>
+                  <p class="contact-number">+91 980 891 6228</p>
+                  <p class="thank-you">Thank you for trusting Dr. Hashmi – Hashmi Dawakhana. 🙏</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div id="placeholderMessage" class="text-center py-12 text-gray-500">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <p class="text-lg">Fill the form and click "Generate Slip" to preview</p>
+          </div>
+        </div>
+
+        <!-- Image Actions -->
+        <div id="imageActions" class="bg-white rounded-2xl shadow-xl p-6" style="display: none;">
+          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            🖼️ Image Actions
+          </h3>
+          <div class="grid grid-cols-3 gap-3">
+            <button onclick="copyImage()" class="btn-secondary py-3 px-4 rounded-xl font-semibold text-sm">
+              📋 Copy Image
+            </button>
+            <button onclick="downloadImage()" class="btn-secondary py-3 px-4 rounded-xl font-semibold text-sm">
+              ⬇️ Download
+            </button>
+            <button onclick="shareImage()" class="btn-secondary py-3 px-4 rounded-xl font-semibold text-sm">
+              📤 Share
+            </button>
+          </div>
+        </div>
+
+        <!-- Tracking Link -->
+        <div id="trackingSection" class="bg-white rounded-2xl shadow-xl p-6" style="display: none;">
+          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+            🔗 Tracking Link
+          </h3>
+          <div class="flex gap-3">
+            <input type="text" id="trackingUrl" readonly class="flex-1 px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-sm font-mono text-gray-700 focus:outline-none">
+            <button onclick="copyLink()" class="btn-primary text-white font-bold py-3 px-6 rounded-xl whitespace-nowrap">
+              📋 Copy Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">✓ Copied successfully!</div>
+
+  <script>
+    // Courier URL configuration
+    const courierUrls = {
+      "Sureship": "https://www.sureship.in/track?label=AWB&awbs=",
+      "EKART": "https://www.ekartlogistics.com/ekartlogistics-web/shipmenttrack/",
+      "India Post": "https://www.indiapost.gov.in/",
+      "Blue Dart": "https://www.bluedart.com/?"
+    };
+
+    // Status messages
+    const statusMessages = {
+      "Shipped": "Your medicine parcel has been shipped and is on its way to you.",
+      "In Transit": "Your medicine parcel is currently in transit.",
+      "Out for Delivery": "Your medicine parcel is out for delivery.",
+      "Delivered": "Your medicine parcel has been delivered successfully.",
+      "Ready to Dispatch": "Your medicine parcel is ready to be dispatched.",
+      "Network Delay": "Your medicine parcel is in transit, but delivery may be delayed due to a network issue.",
+      "Redirected": "Your medicine parcel has been redirected and is currently being processed for delivery."
+    };
+
+    let generatedCanvas = null;
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function generateSlip() {
+      // Get form values
+      const customerName = document.getElementById('customerName').value.trim();
+      const trackingNumber = document.getElementById('trackingNumber').value.trim();
+      const courier = document.getElementById('courier').value;
+      const amount = document.getElementById('amount').value.trim();
+      const paymentType = document.getElementById('paymentType').value;
+      const deliveryStatus = document.getElementById('deliveryStatus').value;
+
+      // Validation
+      if (!customerName) {
+        alert('Please enter customer name');
+        return;
+      }
+      if (!trackingNumber) {
+        alert('Please enter tracking number');
+        return;
+      }
+      if (!courier) {
+        alert('Please select a courier');
+        return;
+      }
+      if (!deliveryStatus) {
+        alert('Please select delivery status');
+        return;
+      }
+
+      // Update slip content
+      document.getElementById('slipGreeting').textContent = `Dear ${customerName},`;
+      document.getElementById('slipMessage').textContent = statusMessages[deliveryStatus];
+      document.getElementById('slipCourier').textContent = courier;
+      document.getElementById('slipTracking').textContent = trackingNumber;
+
+      // Handle amount
+      const amountRow = document.getElementById('amountRow');
+      if (amount && paymentType) {
+        amountRow.style.display = 'flex';
+        document.getElementById('slipAmount').textContent = `₹${amount} (${paymentType})`;
+      } else {
+        amountRow.style.display = 'none';
+      }
+
+      // Generate tracking URL
+      const trackingUrl = courierUrls[courier] + trackingNumber;
+      document.getElementById('trackingUrl').value = trackingUrl;
+
+      // Show preview and actions
+      document.getElementById('placeholderMessage').style.display = 'none';
+      document.getElementById('previewContainer').style.display = 'block';
+      document.getElementById('imageActions').style.display = 'block';
+      document.getElementById('trackingSection').style.display = 'block';
+
+      // Generate canvas for image operations
+      generateCanvas();
+    }
+
+    async function generateCanvas() {
+      const slipElement = document.getElementById('slipContent');
+      generatedCanvas = await html2canvas(slipElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        width: 1080,
+        height: 1350
+      });
+    }
+
+    async function copyImage() {
+      if (!generatedCanvas) {
+        alert('Please generate slip first');
+        return;
+      }
+
+      try {
+        generatedCanvas.toBlob(async (blob) => {
+          if (!blob) {
+            alert('Failed to generate image');
+            return;
+          }
+
+          const item = new ClipboardItem({ 'image/png': blob });
+          await navigator.clipboard.write([item]);
+          showToast('✓ Image copied!');
+        }, 'image/png');
+      } catch (err) {
+        alert('Image copying is not supported by this browser. Please use Download Image.');
+        console.error('Copy failed:', err);
+      }
+    }
+
+    function downloadImage() {
+      if (!generatedCanvas) {
+        alert('Please generate slip first');
+        return;
+      }
+
+      const trackingNumber = document.getElementById('trackingNumber').value.trim() || 'slip';
+      const link = document.createElement('a');
+      link.download = `Hashmi-Dawakhana-Delivery-Slip-${trackingNumber}.png`;
+      link.href = generatedCanvas.toDataURL('image/png');
+      link.click();
+      showToast('✓ Image downloaded!');
+    }
+
+    async function shareImage() {
+      if (!generatedCanvas) {
+        alert('Please generate slip first');
+        return;
+      }
+
+      try {
+        const blob = await new Promise(resolve => generatedCanvas.toBlob(resolve, 'image/png'));
+        if (!blob) {
+          alert('Failed to generate image');
+          return;
+        }
+
+        const file = new File([blob], 'delivery-slip.png', { type: 'image/png' });
+        
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'Hashmi Dawakhana Delivery Slip',
+            text: 'Your delivery slip from Hashmi Dawakhana'
+          });
+          showToast('✓ Image shared!');
+        } else {
+          alert('Image sharing is not supported on this device. Please use Download Image or Copy Image.');
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          alert('Failed to share image. Please try Download or Copy.');
+          console.error('Share failed:', err);
+        }
+      }
+    }
+
+    async function copyLink() {
+      const url = document.getElementById('trackingUrl').value;
+      if (!url) {
+        alert('No tracking link to copy');
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('✓ Tracking link copied!');
+      } catch (err) {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast('✓ Tracking link copied!');
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('slipForm').reset();
+      document.getElementById('placeholderMessage').style.display = 'block';
+      document.getElementById('previewContainer').style.display = 'none';
+      document.getElementById('imageActions').style.display = 'none';
+      document.getElementById('trackingSection').style.display = 'none';
+      generatedCanvas = null;
+    }
+
+    // Auto-scale preview for mobile
+    function adjustPreviewScale() {
+      const wrapper = document.querySelector('.preview-wrapper');
+      const slip = document.getElementById('slipContent');
+      
+      if (window.innerWidth < 768) {
+        slip.style.width = '540px';
+        slip.style.height = '675px';
+      } else {
+        slip.style.width = '1080px';
+        slip.style.height = '1350px';
+      }
+    }
+
+    window.addEventListener('resize', adjustPreviewScale);
+    adjustPreviewScale();
+  </script>
+</body>
+</html>
